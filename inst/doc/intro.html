@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Hongfang Sun" />
+
+<meta name="date" content="2020-01-01" />
+
+<title>Introduction to SC19052</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#header {
+text-align: center;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to SC19052</h1>
+<h4 class="author">Hongfang Sun</h4>
+<h4 class="date">2020-01-01</h4>
+
+
+
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p><strong>SC19052</strong> is a simple R package developed to be used in collective risk model and risk measures.There are four functions in the R package,namely, <em>ParaApp</em>, <em>Panjer.Poisson</em>, <em>SparseVec</em>,and <em>VaRplot</em>,the three R functions can compute the cumulative loss for collective risk model,and a drawing function for risk measures can draw the curve of VaR and TVaR changing with quantile level.</p>
+</div>
+<div id="collective-risk-model-calculation" class="section level2">
+<h2>Collective risk model calculation</h2>
+<p>In the collective risk model, it is assumed that the number of losses of an insurance policy during an insurance period is a random variable N, and the amount of the i-th loss is another random variable <span class="math inline">\(X_{i}\)</span>, in which the loss amount of each time <span class="math inline">\(X_{i}\)</span> is independently and uniformly distributed. The cumulative loss of the collective risk model can be expressed as <span class="math display">\[
+S=X_{1}+X_{2}+\cdots+X_{N}
+\]</span> Then the exact distribution of cumulative loss is <span class="math display">\[
+\operatorname{Pr}(S=s)=\sum_{n=0}^{\infty} \operatorname{Pr}(S=s | N=n) \operatorname{Pr}(N=n)
+\]</span></p>
+<div id="the-method-of-parametric-approximation" class="section level3">
+<h3>The method of parametric approximation</h3>
+<p>In the collective risk model, the cumulative loss can be calculated by parametric approximation when N is enough large. The so-called parametric approximation is to approximate the cumulative loss distribution by a parameter distribution, mainly including the normal approximation, the translational gamma approximation, the normal power approximation and the Wilson-Hilfery approximation which as shown below,and <span class="math inline">\(\mu\)</span> , <span class="math inline">\(\sigma\)</span> and <span class="math inline">\(\kappa\)</span> represent the mean,standard deviation and skewness coefficients of the cumulative loss S, respectively. (1)Normal approximation <span class="math display">\[
+F_{s}(s)=\operatorname{Pr}(S \leqslant s)=\operatorname{Pr}\left(\frac{S-\mu}{\sigma} \leqslant \frac{s-\mu}{\sigma}\right) \approx \Phi\left(\frac{s-\mu}{\sigma}\right)
+\]</span></p>
+<p>(2)Translational gamma approximation <span class="math display">\[
+\left\{\begin{array}{l}
+{\alpha=\frac{4}{\kappa^{2}}} \\
+{\beta=\frac{2}{\kappa \sigma}} \\
+{x_{0}=\mu-\frac{2 \sigma}{\kappa}}
+\end{array}\right.
+\]</span> <span class="math display">\[
+\begin{aligned}
+F_{s}(s) &amp;=\operatorname{Pr}(S \leqslant s)
+ \approx \operatorname{Pr}\left(W+x_{0} \leqslant s\right) =\operatorname{Pr}\left(W \leqslant s-x_{0}\right) =F_{\mathrm{G}}\left(s-x_{0}\right)
+\end{aligned}
+\]</span></p>
+<p>(3)Normal power approximation <span class="math display">\[
+F_{s}(s) \approx \Phi\left(-\frac{3}{\kappa}+\sqrt{\frac{9}{\kappa^{2}}+1+\frac{6}{\kappa} \frac{s-\mu}{\sigma}}\right)
+\]</span></p>
+<p>(4)Wilson-Hilfery approximation <span class="math display">\[
+F_{s}(s) \approx \Phi\left[3\left(\frac{2}{\kappa}\right)^{2 / 3}\left(\frac{s-\mu}{\sigma}+\frac{2}{\kappa}\right)^{1 / 3}-\frac{6}{\kappa}+\frac{\kappa}{6}\right]
+\]</span></p>
+<p>The function-“ParaApp” can approximate the cumulative loss distribution by choosing any of the four methods.<br />
+The source R code for <em>ParaApp</em> is as follows:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">ParaApp &lt;-<span class="st"> </span><span class="cf">function</span>(s,mu,sigma,k,method){</a>
+<a class="sourceLine" id="cb1-2" title="2">  <span class="cf">if</span>(method<span class="op">==</span><span class="st">&quot;normal&quot;</span>){</a>
+<a class="sourceLine" id="cb1-3" title="3">    Fs &lt;-<span class="st"> </span><span class="kw">pnorm</span>((s<span class="op">-</span>mu)<span class="op">/</span>sigma)</a>
+<a class="sourceLine" id="cb1-4" title="4">  }</a>
+<a class="sourceLine" id="cb1-5" title="5">  <span class="cf">if</span>(method<span class="op">==</span><span class="st">&quot;Tgamma&quot;</span>){</a>
+<a class="sourceLine" id="cb1-6" title="6">    alpha &lt;-<span class="st"> </span><span class="dv">4</span><span class="op">/</span>k<span class="op">^</span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb1-7" title="7">    beta &lt;-<span class="st"> </span><span class="dv">2</span><span class="op">/</span>(k<span class="op">*</span>sigma) </a>
+<a class="sourceLine" id="cb1-8" title="8">    x0 &lt;-<span class="st"> </span>mu<span class="dv">-2</span><span class="op">*</span>sigma<span class="op">/</span>k</a>
+<a class="sourceLine" id="cb1-9" title="9">    Fs &lt;-<span class="st"> </span><span class="kw">pgamma</span>(s<span class="op">-</span>x0,<span class="dt">shape=</span>alpha,<span class="dt">rate=</span>beta)</a>
+<a class="sourceLine" id="cb1-10" title="10">  }</a>
+<a class="sourceLine" id="cb1-11" title="11">  <span class="cf">if</span>(method<span class="op">==</span><span class="st">&quot;normal power&quot;</span>){</a>
+<a class="sourceLine" id="cb1-12" title="12">    Fs &lt;-<span class="st"> </span><span class="kw">pnorm</span>(<span class="op">-</span><span class="dv">3</span><span class="op">/</span>k<span class="op">+</span><span class="kw">sqrt</span>(<span class="dv">9</span><span class="op">/</span>k<span class="op">^</span><span class="dv">2</span><span class="op">+</span><span class="dv">1</span><span class="op">+</span><span class="dv">6</span><span class="op">/</span>k<span class="op">*</span>(s<span class="op">-</span>mu)<span class="op">/</span>sigma))</a>
+<a class="sourceLine" id="cb1-13" title="13">  }</a>
+<a class="sourceLine" id="cb1-14" title="14">  <span class="cf">if</span>(method<span class="op">==</span><span class="st">&quot;Wilson Hilfery&quot;</span>){</a>
+<a class="sourceLine" id="cb1-15" title="15">    Fs &lt;-<span class="st"> </span><span class="kw">pnorm</span>(<span class="dv">3</span><span class="op">*</span>(<span class="dv">2</span><span class="op">/</span>k)<span class="op">^</span>(<span class="dv">2</span><span class="op">/</span><span class="dv">3</span>)<span class="op">*</span>((s<span class="op">-</span>mu)<span class="op">/</span>sigma<span class="op">+</span><span class="dv">2</span><span class="op">/</span>k)<span class="op">^</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">3</span>)<span class="op">-</span><span class="dv">6</span><span class="op">/</span>k<span class="op">+</span>k<span class="op">/</span><span class="dv">6</span>)</a>
+<a class="sourceLine" id="cb1-16" title="16">  }</a>
+<a class="sourceLine" id="cb1-17" title="17">  <span class="kw">return</span>(Fs)</a>
+<a class="sourceLine" id="cb1-18" title="18">}</a></code></pre></div>
+<p>Example 1<br />
+Supposed that the number of losses N obeys the poisson distribution with a parameter of 3, and the amount of losses X obeys the exponential distribution with a ratio parameter of 0.01.<br />
+We can get the the mean, variance and skewness coefficients of the cumulative loss S: <span class="math display">\[
+\mu=300, \quad \sigma^{2}=60000, \quad \kappa=1.2247
+\]</span></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">s &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">1000</span>)</a>
+<a class="sourceLine" id="cb2-2" title="2">mu &lt;-<span class="st"> </span><span class="dv">300</span></a>
+<a class="sourceLine" id="cb2-3" title="3">sigma &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">60000</span>)</a>
+<a class="sourceLine" id="cb2-4" title="4">k &lt;-<span class="st"> </span><span class="fl">1.2247</span></a>
+<a class="sourceLine" id="cb2-5" title="5">Fs1 &lt;-<span class="st"> </span><span class="kw">ParaApp</span>(s,mu,sigma,k,<span class="dt">method=</span><span class="st">&quot;normal&quot;</span>)</a>
+<a class="sourceLine" id="cb2-6" title="6">Fs2 &lt;-<span class="st"> </span><span class="kw">ParaApp</span>(s,mu,sigma,k,<span class="dt">method=</span><span class="st">&quot;Tgamma&quot;</span>)</a>
+<a class="sourceLine" id="cb2-7" title="7">Fs3 &lt;-<span class="st"> </span><span class="kw">ParaApp</span>(s,mu,sigma,k,<span class="dt">method=</span><span class="st">&quot;normal power&quot;</span>)</a>
+<a class="sourceLine" id="cb2-8" title="8">Fs4 &lt;-<span class="st"> </span><span class="kw">ParaApp</span>(s,mu,sigma,k,<span class="dt">method=</span><span class="st">&quot;Wilson Hilfery&quot;</span>)</a>
+<a class="sourceLine" id="cb2-9" title="9"><span class="kw">plot</span>(s,Fs1,<span class="dt">pch=</span><span class="st">&quot;&quot;</span>,<span class="dt">ylab=</span><span class="st">&quot;Fs&quot;</span>)</a>
+<a class="sourceLine" id="cb2-10" title="10"><span class="kw">lines</span>(s,Fs1,<span class="dt">col=</span><span class="st">&#39;red&#39;</span>)</a>
+<a class="sourceLine" id="cb2-11" title="11"><span class="kw">lines</span>(s,Fs2,<span class="dt">col=</span><span class="st">&#39;blue&#39;</span>)</a>
+<a class="sourceLine" id="cb2-12" title="12"><span class="kw">lines</span>(s,Fs3,<span class="dt">col=</span><span class="st">&#39;green&#39;</span>)</a>
+<a class="sourceLine" id="cb2-13" title="13"><span class="kw">lines</span>(s,Fs4,<span class="dt">col=</span><span class="st">&#39;yellow&#39;</span>)</a></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+<div id="panjer-recursion" class="section level3">
+<h3>Panjer recursion</h3>
+<p>According to the theorem of Panjer recursion, when <span class="math inline">\(N \sim Poisson(\lambda)\)</span>, Xi(i=1,2…N) has probability distribution function p(x),x=0,1,2…,then the probability distribution function of the cumulative loss S satisfies the following relation: <span class="math display">\[
+\begin{aligned}
+&amp;f(0)=\mathrm{e}^{-\lambda(1-p(0))}\\
+&amp;f(s)=\frac{1}{s} \sum_{h=1}^{s} \lambda h p(h) f(s-h)
+\end{aligned}
+\]</span></p>
+<p>The function-“Panjer.Poisson” can be used to calculate the relation above.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">Panjer.Poisson &lt;-<span class="st"> </span><span class="cf">function</span>(p,lambda){</a>
+<a class="sourceLine" id="cb3-2" title="2">  <span class="cf">if</span>(<span class="kw">sum</span>(p)<span class="op">&gt;</span><span class="dv">1</span><span class="op">||</span><span class="kw">any</span>(p<span class="op">&lt;</span><span class="dv">0</span>)) <span class="kw">stop</span>(<span class="st">&quot;p parameter not a density&quot;</span>)</a>
+<a class="sourceLine" id="cb3-3" title="3">  <span class="cf">if</span>(lambda<span class="op">*</span><span class="kw">sum</span>(p)<span class="op">&gt;</span><span class="dv">727</span>) <span class="kw">stop</span>(<span class="st">&quot;Underflow&quot;</span>)</a>
+<a class="sourceLine" id="cb3-4" title="4">  cumul &lt;-<span class="st"> </span>f &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span>lambda<span class="op">*</span><span class="kw">sum</span>(p))</a>
+<a class="sourceLine" id="cb3-5" title="5">  r &lt;-<span class="st"> </span><span class="kw">length</span>(p)</a>
+<a class="sourceLine" id="cb3-6" title="6">  s &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb3-7" title="7">  <span class="cf">repeat</span>{</a>
+<a class="sourceLine" id="cb3-8" title="8">    s &lt;-<span class="st"> </span>s<span class="op">+</span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb3-9" title="9">    m &lt;-<span class="st"> </span><span class="kw">min</span>(s,r)</a>
+<a class="sourceLine" id="cb3-10" title="10">    last &lt;-<span class="st"> </span>lambda<span class="op">/</span>s<span class="op">*</span><span class="kw">sum</span>(<span class="dv">1</span><span class="op">:</span>m<span class="op">*</span><span class="kw">head</span>(p,m)<span class="op">*</span><span class="kw">rev</span>(<span class="kw">tail</span>(f,m)))</a>
+<a class="sourceLine" id="cb3-11" title="11">    f &lt;-<span class="st"> </span><span class="kw">c</span>(f,last)</a>
+<a class="sourceLine" id="cb3-12" title="12">    cumul &lt;-<span class="st"> </span>cumul<span class="op">+</span>last</a>
+<a class="sourceLine" id="cb3-13" title="13">    <span class="cf">if</span>(cumul<span class="op">&gt;</span><span class="fl">0.99999999</span>)</a>
+<a class="sourceLine" id="cb3-14" title="14">    <span class="cf">break</span></a>
+<a class="sourceLine" id="cb3-15" title="15">  }</a>
+<a class="sourceLine" id="cb3-16" title="16">  <span class="kw">return</span>(<span class="kw">list</span>(<span class="dt">f=</span>f,<span class="dt">s=</span>s))</a>
+<a class="sourceLine" id="cb3-17" title="17">}</a></code></pre></div>
+<p>Example 2<br />
+Supposed that <span class="math inline">\(N \sim Poisson(4)\)</span>,and <span class="math inline">\(\operatorname{Pr}[X=1,2,3]=\frac{1}{4}, \frac{1}{2}, \frac{1}{4}\)</span>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">fs &lt;-<span class="st"> </span><span class="kw">Panjer.Poisson</span>(<span class="kw">c</span>(<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.25</span>),<span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb4-2" title="2">s &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span><span class="op">:</span>fs<span class="op">$</span>s)</a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="kw">print</span>(<span class="kw">cbind</span>(s,fs<span class="op">$</span>f))</a></code></pre></div>
+<pre><code>##        s             
+##  [1,]  0 1.831564e-02
+##  [2,]  1 1.831564e-02
+##  [3,]  2 4.578910e-02
+##  [4,]  3 5.799952e-02
+##  [5,]  4 7.402571e-02
+##  [6,]  5 8.867822e-02
+##  [7,]  6 9.312994e-02
+##  [8,]  7 9.570285e-02
+##  [9,]  8 9.178216e-02
+## [10,]  9 8.377593e-02
+## [11,] 10 7.380131e-02
+## [12,] 11 6.220468e-02
+## [13,] 12 5.072814e-02
+## [14,] 13 4.007314e-02
+## [15,] 14 3.068570e-02
+## [16,] 15 2.287751e-02
+## [17,] 16 1.661498e-02
+## [18,] 17 1.177542e-02
+## [19,] 18 8.159327e-03
+## [20,] 19 5.531892e-03
+## [21,] 20 3.674773e-03
+## [22,] 21 2.394301e-03
+## [23,] 22 1.531321e-03
+## [24,] 23 9.622975e-04
+## [25,] 24 5.946036e-04
+## [26,] 25 3.615103e-04
+## [27,] 26 2.164160e-04
+## [28,] 27 1.276396e-04
+## [29,] 28 7.420838e-05
+## [30,] 29 4.255223e-05
+## [31,] 30 2.407681e-05
+## [32,] 31 1.344874e-05
+## [33,] 32 7.419147e-06
+## [34,] 33 4.043774e-06
+## [35,] 34 2.178429e-06
+## [36,] 35 1.160313e-06
+## [37,] 36 6.112597e-07
+## [38,] 37 3.185892e-07
+## [39,] 38 1.643307e-07
+## [40,] 39 8.390940e-08
+## [41,] 40 4.242499e-08
+## [42,] 41 2.124524e-08
+## [43,] 42 1.053984e-08
+## [44,] 43 5.181297e-09</code></pre>
+</div>
+<div id="the-method-of-sparse-vector" class="section level3">
+<h3>The method of sparse vector</h3>
+<p>The function-“SparseVec” also can compute the f(s)-the probability distribution function of the cumulative loss S.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">SparseVec &lt;-<span class="st"> </span><span class="cf">function</span>(p,lambda){</a>
+<a class="sourceLine" id="cb6-2" title="2">  freq &lt;-<span class="st"> </span>p<span class="op">*</span>lambda</a>
+<a class="sourceLine" id="cb6-3" title="3">  <span class="cf">if</span> (<span class="kw">any</span>(freq<span class="op">&lt;</span><span class="dv">0</span>)) <span class="kw">stop</span>(<span class="st">&quot;negative frequency&quot;</span>)</a>
+<a class="sourceLine" id="cb6-4" title="4">  M &lt;-<span class="st"> </span><span class="kw">length</span>(freq)</a>
+<a class="sourceLine" id="cb6-5" title="5">  mu &lt;-<span class="st"> </span><span class="kw">sum</span>((<span class="dv">1</span><span class="op">:</span>M)<span class="op">*</span>freq)</a>
+<a class="sourceLine" id="cb6-6" title="6">  sigma2 &lt;-<span class="st"> </span><span class="kw">sum</span>((<span class="dv">1</span><span class="op">:</span>M)<span class="op">^</span><span class="dv">2</span><span class="op">*</span>freq)</a>
+<a class="sourceLine" id="cb6-7" title="7">  MM &lt;-<span class="st"> </span><span class="kw">ceiling</span>(mu<span class="op">+</span><span class="dv">10</span><span class="op">*</span><span class="kw">sqrt</span>(sigma2))<span class="op">+</span><span class="dv">6</span></a>
+<a class="sourceLine" id="cb6-8" title="8">  fs &lt;-<span class="st"> </span><span class="kw">dpois</span>(<span class="dv">0</span><span class="op">:</span>(MM<span class="dv">-1</span>),freq[<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb6-9" title="9">  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span>M){</a>
+<a class="sourceLine" id="cb6-10" title="10">    MMM &lt;-<span class="st"> </span><span class="kw">trunc</span>((MM<span class="dv">-1</span>)<span class="op">/</span>j)</a>
+<a class="sourceLine" id="cb6-11" title="11">    fj &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span>,MM)</a>
+<a class="sourceLine" id="cb6-12" title="12">    fj[(<span class="dv">0</span><span class="op">:</span>MMM)<span class="op">*</span>j<span class="op">+</span><span class="dv">1</span>] &lt;-<span class="st"> </span><span class="kw">dpois</span>(<span class="dv">0</span><span class="op">:</span>MMM,freq[j])</a>
+<a class="sourceLine" id="cb6-13" title="13">    fs &lt;-<span class="st"> </span><span class="kw">convolve</span>(fs,<span class="kw">rev</span>(fj),<span class="dt">type=</span><span class="st">&quot;o&quot;</span>)</a>
+<a class="sourceLine" id="cb6-14" title="14">  }</a>
+<a class="sourceLine" id="cb6-15" title="15">  <span class="kw">return</span>(<span class="kw">list</span>(<span class="dt">f=</span>fs,<span class="dt">s=</span><span class="kw">length</span>(fs)<span class="op">-</span><span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb6-16" title="16">}</a></code></pre></div>
+<p>Example 3 Supposed that <span class="math inline">\(N \sim Poisson(4)\)</span>,and <span class="math inline">\(\operatorname{Pr}[X=1,2,3]=\frac{1}{4}, \frac{1}{2}, \frac{1}{4}\)</span>.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">f &lt;-<span class="st"> </span><span class="kw">SparseVec</span>(<span class="kw">c</span>(<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.25</span>),<span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb7-2" title="2"><span class="kw">print</span>(f)</a></code></pre></div>
+<pre><code>## $f
+##   [1] 1.831564e-02 1.831564e-02 4.578910e-02 5.799952e-02 7.402571e-02
+##   [6] 8.867822e-02 9.312994e-02 9.570285e-02 9.178216e-02 8.377593e-02
+##  [11] 7.380131e-02 6.220468e-02 5.072814e-02 4.007314e-02 3.068570e-02
+##  [16] 2.287751e-02 1.661498e-02 1.177542e-02 8.159327e-03 5.531892e-03
+##  [21] 3.674773e-03 2.394301e-03 1.531321e-03 9.622975e-04 5.946036e-04
+##  [26] 3.615103e-04 2.164160e-04 1.276396e-04 7.420838e-05 4.255223e-05
+##  [31] 2.407681e-05 1.344874e-05 7.419147e-06 4.043774e-06 2.178429e-06
+##  [36] 1.160313e-06 6.112597e-07 3.185892e-07 1.643307e-07 8.390940e-08
+##  [41] 4.242499e-08 2.124524e-08 1.053984e-08 5.181297e-09 2.524463e-09
+##  [46] 1.219315e-09 5.839361e-10 2.773317e-10 1.306463e-10 6.105678e-11
+##  [51] 2.831277e-11 1.302903e-11 5.950992e-12 2.698245e-12 1.214653e-12
+##  [56] 5.429582e-13 2.411014e-13 1.063845e-13 4.666948e-14 2.041425e-14
+##  [61] 8.942304e-15 3.952644e-15 1.802706e-15 8.577284e-16 4.583417e-16
+##  [66] 2.926653e-16 2.025829e-16 1.594714e-16 1.404202e-16 1.374640e-16
+##  [71] 1.143070e-16 1.058900e-16 8.897386e-17 8.309223e-17 8.759840e-17
+##  [76] 6.118236e-17 5.760770e-17 5.584988e-17 4.598557e-17 3.292895e-17
+##  [81] 4.442534e-17 3.851291e-17 4.163336e-17 4.779214e-17 3.687057e-17
+##  [86] 4.998878e-17 4.603689e-17 4.233136e-17 3.471500e-17 3.939567e-17
+##  [91] 2.988549e-17 1.839423e-17 1.979022e-17 2.668805e-17 2.356760e-17
+##  [96] 3.489976e-17 3.235413e-17 2.882310e-17 4.526704e-17 3.345245e-17
+## [101] 4.044267e-17 3.097867e-17 3.779439e-17 3.350890e-17 2.397819e-17
+## [106] 3.440706e-17 3.038332e-17 3.235413e-17 4.385052e-17 5.255494e-17
+## [111] 6.097194e-17 4.504122e-17 6.800321e-17 5.167218e-17 3.998589e-17
+## [116] 4.750217e-17 3.152270e-17 2.348549e-17 2.512783e-17 1.921540e-17
+## [121] 1.970810e-17 2.332125e-17 1.564331e-17 2.557947e-17 2.699599e-17
+## [126] 2.619535e-17 2.576424e-17 2.095012e-17 1.731131e-17 1.202502e-17
+## [131] 9.032880e-18 8.375943e-18 8.047475e-18 8.375943e-18 1.203015e-17
+## [136] 1.728565e-17 1.334403e-17 2.048821e-17 6.867041e-18 8.427266e-18
+## [141] 1.110634e-17 8.255333e-18 7.464956e-18 3.366801e-18 3.859503e-18
+## [146] 8.375943e-18 1.161957e-17 1.071628e-17 1.870217e-17 1.521219e-17
+## [151] 1.931804e-17 2.165838e-17 1.216873e-17 2.035477e-17 1.673007e-17
+## [156] 1.822871e-17 2.627747e-18 5.255494e-18 1.182486e-17 7.883240e-18
+## [161] 1.182486e-17 2.759134e-17 2.003657e-17 3.711692e-17 4.500016e-17
+## [166] 3.613152e-17 2.874098e-17 2.254114e-17 1.909222e-17
+## 
+## $s
+## [1] 168</code></pre>
+</div>
+</div>
+<div id="risk-measures" class="section level2">
+<h2>Risk measures</h2>
+<p>In risk measurement, VaR(Value at Risk) is commonly used to describe the maximum possible loss at a certain confidence level. <span class="math display">\[
+\operatorname{VaR}_{p}(X)=\inf \{x \in R | F(x) \geqslant p\}=\inf \{x \in R | \bar{F}(x)&lt;1-p\}
+\]</span> TVaR is defined on the basis of VaR and refers to the expected value of the loss beyond VaR. The TVaR of the lost random variable X is defined as follows <span class="math display">\[
+\mathrm{TVaR}_{p}(X)=E\left[X | X&gt;\mathrm{VaR}_{p}(X)\right]
+\]</span> The relation between them is <span class="math display">\[
+\operatorname{TVaR}_{p}(X)=\operatorname{VaR}_{p}(X)+\frac{P\left[X&gt;\operatorname{VaR}_{p}(X)\right]}{1-p} E\left[X-\operatorname{VaR}_{p}(X) | X&gt;\operatorname{VaR}_{p}(X)\right]
+\]</span></p>
+<p>The function-“VaRplot” can draw the curve of VaR and TVaR changing with quantile level.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">VaRplot &lt;-<span class="st"> </span><span class="cf">function</span>(x){</a>
+<a class="sourceLine" id="cb9-2" title="2">p &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="fl">0.01</span>,<span class="fl">0.99</span>,<span class="fl">0.001</span>)</a>
+<a class="sourceLine" id="cb9-3" title="3">n &lt;-<span class="st"> </span><span class="kw">length</span>(p)</a>
+<a class="sourceLine" id="cb9-4" title="4"></a>
+<a class="sourceLine" id="cb9-5" title="5">VaR=TVaR=<span class="ot">NULL</span></a>
+<a class="sourceLine" id="cb9-6" title="6"><span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>n){</a>
+<a class="sourceLine" id="cb9-7" title="7">  VaR[j] &lt;-<span class="st"> </span><span class="kw">quantile</span>(x,p[j])</a>
+<a class="sourceLine" id="cb9-8" title="8">  TVaR[j] &lt;-<span class="st"> </span>VaR[j]<span class="op">+</span><span class="kw">mean</span>((x<span class="op">-</span>VaR[j])<span class="op">*</span>(x<span class="op">&gt;</span>VaR[j]))<span class="op">/</span>(<span class="dv">1</span><span class="op">-</span>p[j])</a>
+<a class="sourceLine" id="cb9-9" title="9">}</a>
+<a class="sourceLine" id="cb9-10" title="10"></a>
+<a class="sourceLine" id="cb9-11" title="11"><span class="kw">plot</span>(p,VaR,<span class="dt">type=</span><span class="st">&quot;s&quot;</span>,<span class="dt">ylab=</span><span class="st">&quot;&quot;</span>,<span class="dt">lty=</span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb9-12" title="12"><span class="kw">lines</span>(p,TVaR,<span class="dt">type=</span><span class="st">&quot;s&quot;</span>,<span class="dt">lty=</span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb9-13" title="13"><span class="kw">legend</span>(<span class="st">&quot;topleft&quot;</span>,<span class="kw">c</span>(<span class="st">&quot;VaR&quot;</span>,<span class="st">&quot;TVaR&quot;</span>),<span class="dt">lty=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>),<span class="dt">bty=</span><span class="st">&quot;n&quot;</span>)</a>
+<a class="sourceLine" id="cb9-14" title="14">}</a></code></pre></div>
+<p>Example 4</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">x &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</span>,<span class="dv">2</span>,<span class="dv">1000</span>)</a>
+<a class="sourceLine" id="cb10-2" title="2"><span class="kw">VaRplot</span>(x)</a></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

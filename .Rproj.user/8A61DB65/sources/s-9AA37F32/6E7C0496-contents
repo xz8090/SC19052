@@ -1,0 +1,31 @@
+
+#' @title Calculation of cumulative loss by spare vector.
+#' @description The prediction model is described in <Modern actuarial risk theory - based on R>.
+#' @param p the probability distribution (NumericVector)
+#' @param lambda The parameters of the poisson distribution (numeric)
+#' @return The maximum possible cumulative loss and the probability of each value (list)
+#' @examples
+#' \dontrun{
+#' p <- c(0.25,0.5,0.25)
+#' lambda <- 4
+#' fs <- SparseVec(p,lambda)
+#' f <- SparseVec(p,lambda)$f
+#' s <- SparseVec(p,lambda)$s
+#' }
+#' @export
+SparseVec <- function(p,lambda){
+  freq <- p*lambda
+  if (any(freq<0)) stop("negative frequency")
+  M <- length(freq)
+  mu <- sum((1:M)*freq)
+  sigma2 <- sum((1:M)^2*freq)
+  MM <- ceiling(mu+10*sqrt(sigma2))+6
+  fs <- dpois(0:(MM-1),freq[1])
+  for(j in 2:M){
+    MMM <- trunc((MM-1)/j)
+    fj <- rep(0,MM)
+    fj[(0:MMM)*j+1] <- dpois(0:MMM,freq[j])
+    fs <- convolve(fs,rev(fj),type="o")
+  }
+  return(list(f=fs,s=length(fs)-1))
+}

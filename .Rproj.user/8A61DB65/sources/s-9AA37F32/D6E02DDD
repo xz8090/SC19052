@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1577860151806.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "468047063",
+    "id" : "D6E02DDD",
+    "lastKnownWriteTime" : 1577860172,
+    "last_content_update" : 1577860172494,
+    "path" : "C:/Users/Administrator/Desktop/SC19052/R/SparseVec.R",
+    "project_path" : "R/SparseVec.R",
+    "properties" : {
+        "cursorPosition" : "1,49",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
